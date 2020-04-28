@@ -1,6 +1,6 @@
 <#import  "parts/Common.ftlh" as c>
 <#import  "parts/Loginn.ftlh" as l>
-<c.page>
+<@c.page>
     Add new user
-    <@l.login "/registration" />
-</c.page>
+    <@l.login "/registration" true/>
+</@c.page>

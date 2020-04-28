@@ -1,8 +1,8 @@
 <#import  "parts/Common.ftlh" as c>
-<#import  "parts/Loginn.ftlh" as l>
-<c.page xmlns="http://www.w3.org/1999/html">
-    <@l.logout/>
-    <span> <a href="/user"> List of users</a></span>
+<@c.page>
+
+    <div> <a href="/room">My rooms </a></div>
+
     <div>
         <form method="post" enctype="multipart/form-data">
             <input type="text" name="text" placeholder="Введите сообщение"/>
@@ -23,4 +23,4 @@
             <#else>
                 No messages
             </#list>
-</c.page>
+</@c.page>

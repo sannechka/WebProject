@@ -1,7 +1,7 @@
 <#import  "parts/Common.ftlh" as c>
 <#import  "parts/Loginn.ftlh" as l>
-<c.page>
+<@c.page>
     Login page
-    <@l.login "/login" />
-    <a href="registration">Add new user </a>
-</c.page>
+    <@l.login "/login" false />
+
+</@c.page>

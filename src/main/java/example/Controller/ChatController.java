@@ -30,6 +30,7 @@ public class ChatController {
         return "greeting";
     }
 
+
     @GetMapping("/chat")
     public String main( Map<String, Object> model){
         Iterable<Message> messages = messageRepo.findAll();

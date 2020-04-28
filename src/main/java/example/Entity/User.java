@@ -6,6 +6,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 
@@ -22,6 +24,24 @@ public class User implements UserDetails {
     @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"))
     @Enumerated(EnumType.STRING)
     private Set<Role> roles;
+     @ManyToMany
+     @JoinTable(
+             name = "user_rooms",
+             joinColumns={@JoinColumn( name ="user_id")},
+             inverseJoinColumns = {@JoinColumn(name="room_id")}
+     )
+     private Set<Room> rooms = new HashSet<>();
+     public boolean isAdmin(){
+         return roles.contains(Role.ADMIN);
+     }
+
+    public Set<Room> getRooms() {
+        return rooms;
+    }
+
+    public void setRooms(Set<Room> rooms) {
+        this.rooms = rooms;
+    }
 
     public Long getId() {
         return id;
