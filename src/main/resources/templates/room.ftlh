@@ -1,21 +1,15 @@
 <#import  "parts/Common.ftlh" as c>
-    <@c.page>
-        My Rooms
-        <table>
-            <thead>
-            <tr>
-                <th>Name</th>
-            </tr>
-            </thead>
-            <tbody>
-            <#list rooms as room>
-                <tr>
-                    <td>${room.name}</td>
-                </tr>
-            </#list>
-            </tbody>
-        </table>
-    </@c.page>
+<@c.page>
+    My Rooms
+    <div> <a  class="btn btn-info" href="createroom">Create new room</a></div>
+    <ul class="list-group">
+        <#list rooms as room>
+            <li class="list-group-item">
+                <a href="/room/${room.getName()}">${room.getName()}</a>
+            </li>
+        </#list>
+    </ul>
+</@c.page>
 
 
 

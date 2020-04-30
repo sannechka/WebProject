@@ -1,13 +1,12 @@
 package example.Entity;
 
-import example.Entity.Role;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 
@@ -17,14 +16,17 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    @NotBlank(message = "Name can't be empty")
     private String username;
+    @NotBlank(message = "Password can't be empty")
     private String password;
     private Boolean active;
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"))
     @Enumerated(EnumType.STRING)
     private Set<Role> roles;
-     @ManyToMany
+
+     @ManyToMany(fetch = FetchType.EAGER)
      @JoinTable(
              name = "user_rooms",
              joinColumns={@JoinColumn( name ="user_id")},

@@ -6,8 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface RoomRepo {
-    public interface  MessageRepo extends JpaRepository<Room,Long> {
-    }
-
+public interface  RoomRepo extends JpaRepository<Room,Long> {
+    Room findByName(String name);
 }
+

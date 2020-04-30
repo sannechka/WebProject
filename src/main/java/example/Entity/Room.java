@@ -2,16 +2,30 @@ package example.Entity;
 
 import javax.persistence.*;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Entity
 public class Room {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
+    private Long id;
     private String name;
-    @ManyToMany
+    @OneToMany(mappedBy = "room",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    private Set<Message> messages;
+
+    public Set<Message> getMessages() {
+        return messages;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setMessages(Set<Message> messages) {
+        this.messages = messages;
+    }
+
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_rooms",
             joinColumns={@JoinColumn( name ="room_id")},

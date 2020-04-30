@@ -4,6 +4,7 @@ import example.Entity.User;
 import example.Repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,7 +15,7 @@ import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/user")
-@PreAuthorize("hasAuthority('ADMIN')")
+
 public class UserController {
     @Autowired
     private UserRepo userRepo;
@@ -32,10 +33,12 @@ public class UserController {
         return "userEdit";
     }
 
+
     @PostMapping
     public String userSave(@RequestParam String username,
                            @RequestParam Map<String, String> form,
                            @RequestParam("userId") User user) {
+        System.out.println(form);
         user.setUsername(username);
         userRepo.save(user);
         Set<String> roles = Arrays.stream(Role.values())
@@ -43,8 +46,10 @@ public class UserController {
                 .collect(Collectors.toSet());
         user.getRoles().clear();
         for (String key : form.keySet()) {
+            System.out.println("ключ у юзера" + key );
             if (roles.contains(key)) {
                 user.getRoles().add(Role.valueOf(key));
+                System.out.println("ключ у юзера" + key + " " + Role.valueOf(key));
             }
         }
         userRepo.save(user);
