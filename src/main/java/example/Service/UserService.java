@@ -1,5 +1,6 @@
 package example.Service;
 
+import example.Entity.User;
 import example.Repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,6 +14,10 @@ public class UserService implements UserDetailsService {
     UserRepo userRepo;
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepo.findByUsername(username);
+         User user = userRepo.findByUsername(username);
+        if(user==null){
+            throw new UsernameNotFoundException("User not found");
+        }
+            return user;
     }
 }

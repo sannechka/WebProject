@@ -9,21 +9,29 @@
 </button>
 
 <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
     <ul class="navbar-nav mr-auto">
+
+        <#if user??>
         <li class="nav-item">
-            <a class="nav-link" href="/">Home</a>
+            <a class="nav-link" href="/room">My rooms</a>
         </li>
-        <li class="nav-item">
-            <a class="nav-link" href="/chat">Messages</a>
-        </li>
+        </#if>
+        <#if user??>
+            <li class="nav-item">
+                <a class="nav-link" href="/addfoto">Foto</a>
+            </li>
+        </#if>
         <#if isAdmin>
             <li class="nav-item">
                 <a class="nav-link" href="/user">User list</a>
             </li>
         </#if>
+
     </ul>
 
-    <div class="navbar-text mr-3">${name}</div>
+
+    <div class="navbar-text mr-3"><#if user??>${name}<#else> Please, Login </#if></div>
     <@l.logout />
 </div>
 </nav>

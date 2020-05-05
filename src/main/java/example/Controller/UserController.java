@@ -40,18 +40,23 @@ public class UserController {
                            @RequestParam("userId") User user) {
         System.out.println(form);
         user.setUsername(username);
-        userRepo.save(user);
         Set<String> roles = Arrays.stream(Role.values())
                 .map(Role::name)
                 .collect(Collectors.toSet());
-        user.getRoles().clear();
+
         for (String key : form.keySet()) {
             System.out.println("ключ у юзера" + key );
-            if (roles.contains(key)) {
-                user.getRoles().add(Role.valueOf(key));
-                System.out.println("ключ у юзера" + key + " " + Role.valueOf(key));
+
+            if(key.equals("block")){
+                user.setActive(false);
+                System.out.println(user.getActive());
+            }
+            if(key.equals("unblock")){
+                user.setActive(true);
+                System.out.println(user.getActive());
             }
         }
+
         userRepo.save(user);
         return "redirect:/user";
     }

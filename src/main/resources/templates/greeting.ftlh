@@ -1,4 +1,7 @@
 <#import  "parts/Common.ftlh" as c>
 <@c.page>
-    <h6> Welcome to CHAT!!!</h6>
+    <div class="page-header">
+        <h3>WELCOME TO CHAT</h3>
+    </div>
+
 </@c.page>
