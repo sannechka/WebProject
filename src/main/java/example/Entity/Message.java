@@ -4,30 +4,29 @@ import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import java.util.Date;
 
 @Entity
-public class Message {
+public class Message implements Comparable<Message> {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
     @NotBlank(message = "Message can't be empty")
-    @Length(max=2048, message = "Message too long")
+    @Length(max = 2048, message = "Message too long")
     private String text;
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User author;
     private String filename;
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "room_id")
     private Room room;
-    private Date time;
+    private String time;
 
     public String getTime() {
-        return time.toString();
+        return time;
     }
 
-    public void setTime(Date time) {
+    public void setTime(String time) {
         this.time = time;
     }
 
@@ -51,14 +50,6 @@ public class Message {
         return author != null ? author.getUsername() : "<none>";
     }
 
-    public Message() {
-    }
-
-    public Message(String text, User user) {
-        this.author = user;
-        this.text = text;
-    }
-
     public void setFilename(String filename) {
         this.filename = filename;
     }
@@ -79,8 +70,15 @@ public class Message {
         return filename;
     }
 
-
     public void setId(Integer id) {
         this.id = id;
+    }
+
+
+    @Override
+    public int compareTo(Message o) {
+        int a = this.getId();
+        int b = o.getId();
+        return (a < b) ? -1 : ((a == b) ? 0 : 1);
     }
 }

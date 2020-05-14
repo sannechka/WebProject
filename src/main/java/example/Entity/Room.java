@@ -13,8 +13,15 @@ public class Room {
     private Long id;
     @NotBlank(message = "Name can't be empty")
     private String name;
-    @OneToMany(mappedBy = "room",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Message> messages;
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "user_rooms",
+            joinColumns = {@JoinColumn(name = "room_id")},
+            inverseJoinColumns = {@JoinColumn(name = "user_id")}
+    )
+    private Set<User> users = new HashSet<>();
 
     public List<Message> getMessages() {
         return messages;
@@ -28,23 +35,12 @@ public class Room {
         this.messages = messages;
     }
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "user_rooms",
-            joinColumns={@JoinColumn( name ="room_id")},
-            inverseJoinColumns = {@JoinColumn(name="user_id")}
-    )
-    private Set<User> users = new HashSet<>();
-
     public Set<User> getUsers() {
         return users;
     }
 
     public void setUsers(Set<User> users) {
         this.users = users;
-    }
-
-    public Room() {
     }
 
     public String getName() {

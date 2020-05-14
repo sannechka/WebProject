@@ -1,6 +1,5 @@
 package example.Repository;
 
-
 import example.Entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 

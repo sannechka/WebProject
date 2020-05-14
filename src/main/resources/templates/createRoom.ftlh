@@ -1,11 +1,11 @@
 <#import  "parts/Common.ftlh" as c>
 <@c.page>
-    <form action="/createroom" method="post" xmlns="http://www.w3.org/1999/html">
+    <form action="/createRoom" method="post" xmlns="http://www.w3.org/1999/html">
         <div>
+
             <ul class="list-group">
                 <#list users as user>
                     <div>
-
                         <label><input type="checkbox" name="${user.getUsername()}" }>${user.getUsername()}</label>
                     </div>
                 </#list>
@@ -22,6 +22,7 @@
                 </div>
                 </#if>
             </div>
+
         </div>
 
         <input type="hidden" name="_csrf" value="${_csrf.token}"/>

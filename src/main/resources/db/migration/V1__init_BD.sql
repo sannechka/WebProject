@@ -16,7 +16,7 @@ create table message
     text     varchar(2048) not null,
     user_id  bigint,
     room_id  bigint,
-    time     date,
+    time     varchar(255),
     primary key (id)
 )
     engine = MyISAM;

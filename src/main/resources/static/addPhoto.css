@@ -1,0 +1,10 @@
+.file-wrap {
+    background: LightCyan;
+    border: 1px solid #87CEEB;
+    max-width: 500px;
+    max-height: 500px;
+
+}
+.media-object{
+    border: 2px solid  #87CEEB;
+}
