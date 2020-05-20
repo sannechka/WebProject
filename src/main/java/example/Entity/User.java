@@ -5,9 +5,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 
 @Entity
@@ -27,13 +25,13 @@ public class User implements UserDetails {
     private Set<Role> roles;
     private String filename;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "user_rooms",
             joinColumns = {@JoinColumn(name = "user_id")},
             inverseJoinColumns = {@JoinColumn(name = "room_id")}
     )
-    private Set<Room> rooms = new HashSet<>();
+    private List<Room> rooms = new ArrayList<>();
 
     public String getFilename() {
         return filename;
@@ -58,11 +56,11 @@ public class User implements UserDetails {
         return roles.contains(Role.ADMIN);
     }
 
-    public Set<Room> getRooms() {
+    public List<Room> getRooms() {
         return rooms;
     }
 
-    public void setRooms(Set<Room> rooms) {
+    public void setRooms(List<Room> rooms) {
         this.rooms = rooms;
     }
 

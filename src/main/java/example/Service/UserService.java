@@ -1,11 +1,9 @@
 package example.Service;
 
-import example.Entity.Role;
 import example.Entity.Room;
 import example.Entity.User;
 import example.Repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -13,11 +11,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
-import java.util.UUID;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -26,8 +22,10 @@ public class UserService implements UserDetailsService {
     UserRepo userRepo;
     @Autowired
     private PasswordEncoder passwordEncoder;
-    @Value("${upload.path}")
-    private String uploadPath;
+
+    @Autowired
+    FileService fileService;
+
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -50,34 +48,41 @@ public class UserService implements UserDetailsService {
         return userRepo.findByUsername(username);
     }
 
-    public void registrUser(User user, Room mainRoom, Room adminRoom) {
-        user.setActive(true);
-        user.setRoles(Collections.singleton(Role.USER));
+    public boolean addUser(User user, Room adminRoom) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.getRooms().add(mainRoom);
         user.getRooms().add(adminRoom);
-        userRepo.findByUsername("Admin").getRooms().add(adminRoom);
         userRepo.save(user);
+        return true;
     }
 
-    public void addPhoto(User user, MultipartFile file) throws IOException {
+    public boolean addPhoto(User user, MultipartFile file) throws IOException {
         if (file != null && !file.getOriginalFilename().isEmpty()) {
-            File uploadDir = new File(uploadPath);
-            if (uploadDir.exists()) {
-                uploadDir.mkdir();
-            }
-            String uuidFile = UUID.randomUUID().toString();
-            String resultFileName = uuidFile + "." + file.getOriginalFilename();
-            file.transferTo(new File(uploadPath + "/" + resultFileName));
-            user.setFilename(resultFileName);
-            userRepo.save(user);
-        }
 
+            user.setFilename(  fileService.filePath(file));
+            userRepo.save(user);
+            return true;
+        }
+        return false;
     }
-    public List<User> getListOfUsers(User user){
+
+    public List<Room> getRooms(User user) {
+        return userRepo.findByUsername(user.getUsername()).getRooms();
+    }
+
+    public List<User> getListOfUsers(User user) {
         return userRepo.findAll().stream()
                 .filter(x -> !x.isAdmin() && !x.getUsername().equals(user.getUsername()))
                 .collect(Collectors.toList());
+    }
+
+    public boolean newName(User user, String newName){
+       String name = newName.chars().filter(x-> x !=' ').mapToObj(Objects::toString).collect(Collectors.joining());
+        if(!name.isEmpty()){
+            user.setUsername(newName);
+            userRepo.save(user);
+            return true;
+        }
+        return false;
     }
 }
 

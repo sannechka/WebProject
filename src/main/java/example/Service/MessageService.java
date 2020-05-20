@@ -5,37 +5,35 @@ import example.Entity.Room;
 import example.Entity.User;
 import example.Repository.MessageRepo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.UUID;
 
 @Service
 public class MessageService {
     @Autowired
     MessageRepo messageRepo;
-    @Value("${upload.path}")
-    private String uploadPath;
+    @Autowired
+    FileService fileService;
 
-    public void createMessage(Message message, MultipartFile file, User user, Room room) throws IOException {
+
+    public void createMessage(Message message, User user, Room room) {
         message.setAuthor(user);
         message.setTime(new SimpleDateFormat().format(new Date()));
         message.setRoom(room);
-        if (file != null && !file.getOriginalFilename().isEmpty()) {
-            File uploadDir = new File(uploadPath);
-            if (uploadDir.exists()) {
-                uploadDir.mkdir();
-            }
-            String uuidFile = UUID.randomUUID().toString();
-            String resultFileName = uuidFile + "." + file.getOriginalFilename();
-            file.transferTo(new File(uploadPath + "/" + resultFileName));
-            message.setFilename(resultFileName);
-        }
         messageRepo.save(message);
     }
+
+    public boolean addFile(Message message, MultipartFile file) throws IOException {
+        if (file != null && !file.getOriginalFilename().isEmpty()) {
+            message.setFilename(fileService.filePath(file));
+            messageRepo.save(message);
+            return true;
+        }
+        return false;
+    }
 }
+

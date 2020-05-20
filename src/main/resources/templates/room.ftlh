@@ -9,7 +9,7 @@
         <#list rooms as room>
             <li class=" p-2 list-group-item">
                 <div class="p-2 media-body">
-                    <a  href="/room/${room.getName()}">${room.getName()}</a>
+                    <a  href="/room/${room.getId()}">${room.getName()}</a>
                 </div>
             </li>
         </#list>

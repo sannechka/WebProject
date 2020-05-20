@@ -36,7 +36,8 @@ public class RoomController {
 
     @GetMapping("/room")
     public String getRooms(Map<String, Object> model, @AuthenticationPrincipal User user) {
-        model.put("rooms", user.getRooms());
+
+        model.put("rooms", userService.getRooms(user));
         return "room";
     }
 
@@ -64,7 +65,7 @@ public class RoomController {
             List<String> names = users.stream().map(User::getUsername).collect(Collectors.toList());
             for (String key : form.keySet()) {
                 if (names.contains(key)) {
-                    roomService.roomAddUser(room, userService.findByUsername(key));
+               room.getUsers().add(userService.findByUsername(key));
                 }
             }
             if (room.getUsers().isEmpty()) {
@@ -72,16 +73,17 @@ public class RoomController {
                 model.addAttribute("users", userService.getListOfUsers(user));
                 return "createRoom";
             }
-            roomService.roomAddUser(room, user);
+            room.getUsers().add(user);
+            roomService.saveRoom(room);
             return "redirect:/room";
         }
 
     }
 
-    @GetMapping("/room/{roomName}")
-    public String main(@PathVariable String roomName, Map<String, Object> model) {
-        Room room = roomService.findByRoomName(roomName);
-        List<Message> messages = room.getMessages();
+    @GetMapping("/room/{roomId}")
+    public String main(@PathVariable Long roomId, Map<String, Object> model) {
+        Room room = roomService.findByRoomId(roomId);
+        List<Message> messages = roomService.getMessage(roomId);
         Collections.sort(messages);
         model.put("messages", messages);
         model.put("room", room);
@@ -93,7 +95,7 @@ public class RoomController {
     @PostMapping("/privateChat")
     public String add(@AuthenticationPrincipal User user,
                       @RequestParam("file") MultipartFile file,
-                      @RequestParam String roomName,
+                      @RequestParam Long roomId,
                       @Valid Message message,
                       BindingResult bindingResult,
                       Model model) throws IOException {
@@ -103,11 +105,12 @@ public class RoomController {
             model.addAttribute("message", message);
         } else {
             model.addAttribute("message", null);
-            messageService.createMessage(message, file, user, roomService.findByRoomName(roomName));
+            messageService.createMessage(message,  user, roomService.findByRoomId(roomId));
+            messageService.addFile(message,file);
         }
-        model.addAttribute("messages", roomService.getMessage(roomName));
-        model.addAttribute("room", roomService.findByRoomName(roomName));
-        model.addAttribute("users", roomService.findByRoomName(roomName).getUsers());
+        model.addAttribute("messages", roomService.getMessage(roomId));
+        model.addAttribute("room", roomService.findByRoomId(roomId));
+        model.addAttribute("users", roomService.findByRoomId(roomId).getUsers());
         return "privateChat";
     }
 }

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 
 @Controller
@@ -27,7 +29,7 @@ public class UserController {
     @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/user")
     public String userList(Map<String, Object> model) {
-        model.put("users", userService.findAll());
+        model.put("users", userService.findAll().stream().filter(x->!x.isAdmin()).collect(Collectors.toList()));
         return "userList";
     }
 
@@ -35,7 +37,6 @@ public class UserController {
     @GetMapping("user/{user}")
     public String userEditForm(@PathVariable User user, Map<String, Object> model) {
         model.put("user", user);
-        model.put("roles", Role.values());
         return "userEdit";
     }
 
@@ -43,8 +44,13 @@ public class UserController {
     @PostMapping("/user")
     public String userSave(@RequestParam String username,
                            @RequestParam Map<String, String> form,
-                           @RequestParam("userId") User user) {
-        user.setUsername(username);
+                           @RequestParam("userId") User user,
+                           Model model) {
+        if(!userService.newName(user,username)){
+            model.addAttribute("usernameError","Name can't be empty");
+            model.addAttribute("user", user);
+            return "userEdit";
+        }
         for (String key : form.keySet()) {
             if (key.equals("block")) {
                 user.setActive(false);

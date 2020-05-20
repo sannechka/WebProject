@@ -24,17 +24,17 @@ public class DataLoader implements ApplicationRunner {
 
 
     @Override
-    public void run(ApplicationArguments args) throws Exception {
+    public void run(ApplicationArguments args) {
         if (roomRepo.findByName("Main room") == null) {
-            Room room = new Room();
-            room.setName("Main room");
-            roomRepo.save(room);
+            Room mainroom = new Room();
+            mainroom.setName("Main room");
+            roomRepo.save(mainroom);
             User user = new User();
             user.setActive(true);
             user.setUsername("Admin");
             user.setRoles(Collections.singleton(Role.ADMIN));
             user.setPassword(passwordEncoder.encode("123"));
-            user.getRooms().add(room);
+            user.getRooms().add(mainroom);
             userRepo.save(user);
         }
     }

@@ -8,13 +8,14 @@
         <div class=" p-2 form-group row">
             <label class=" text-secondary col-sm-3 col-form-label">Edit username:</label>
 
-            <div class="col-md-4">
-                <input class="  text-primary col-sm-3 form-control" type="text" name="username"
-                       value="${user.username}"/>
-
-            </div>
-
+            <input type="text" name="username"
+                   class=" col-sm-3 form-control"
+                   value="${user.username}"/>
+            <#if usernameError??>
+                <label class=" text-secondary col-sm-3 col-form-label">   ${usernameError}</label>
+            </#if>
         </div>
+
         <div class=" p-2 m-1 form-group row">
             <#if user.isActive()>
                 <label class="text-secondary"><input type="checkbox" name="block">Block user</label>

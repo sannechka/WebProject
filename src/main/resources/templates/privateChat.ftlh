@@ -69,7 +69,7 @@
                         <div class="btn-panel">
                             <input type="file" name="file">
                             <input type="hidden" name="_csrf" value="${_csrf.token}"/>
-                            <input type="hidden" value="${room.getName()}" name='roomName'>
+                            <input type="hidden" value="${room.getId()}" name='roomId'>
                             <button class="btn btn-primary" type="submit"> Send</button>
                             <a class="btn btn-primary " href="/room">Back</a>
                         </div>

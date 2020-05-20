@@ -14,24 +14,26 @@ public class RoomService {
     @Autowired
     private RoomRepo roomRepo;
 
-    public Room findByRoomName(String roomName) {
-        return roomRepo.findByName(roomName);
+
+    public Room findByRoomId(Long roomId) {
+        return roomRepo.findById(roomId).get();
     }
 
-    public Room getRoomWithAdmin(String username) {
+
+    public Room getRoomWithAdmin(String username, User admin) {
         Room room = new Room();
         room.setName("Chat with admin (" + username + ")");
+        room.getUsers().add(admin);
         roomRepo.save(room);
         return room;
     }
 
-    public void roomAddUser(Room room, User user) {
-        room.getUsers().add(user);
+    public void saveRoom(Room room) {
         roomRepo.save(room);
     }
 
-    public List<Message> getMessage(String roomName) {
-        return roomRepo.findByName(roomName).getMessages();
+    public List<Message> getMessage(Long roomId) {
+        return roomRepo.findById(roomId).get().getMessages();
     }
 
 }

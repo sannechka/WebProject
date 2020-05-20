@@ -2,6 +2,7 @@ package example.Entity;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -21,7 +22,7 @@ public class Room {
             joinColumns = {@JoinColumn(name = "room_id")},
             inverseJoinColumns = {@JoinColumn(name = "user_id")}
     )
-    private Set<User> users = new HashSet<>();
+    private List<User> users = new ArrayList<>();
 
     public List<Message> getMessages() {
         return messages;
@@ -35,11 +36,11 @@ public class Room {
         this.messages = messages;
     }
 
-    public Set<User> getUsers() {
+    public List<User> getUsers() {
         return users;
     }
 
-    public void setUsers(Set<User> users) {
+    public void setUsers(List<User> users) {
         this.users = users;
     }
 
