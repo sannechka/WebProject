@@ -1,6 +1,5 @@
 package example.Controller;
 
-import example.Entity.Role;
 import example.Entity.User;
 import example.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,37 +28,33 @@ public class UserController {
     @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/user")
     public String userList(Map<String, Object> model) {
-        model.put("users", userService.findAll().stream().filter(x->!x.isAdmin()).collect(Collectors.toList()));
+        model.put("users", userService.findAll().stream().filter(x -> !x.isAdmin()).collect(Collectors.toList()));
         return "userList";
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("user/{user}")
-    public String userEditForm(@PathVariable User user, Map<String, Object> model) {
-        model.put("user", user);
+    public String userEditForm(@PathVariable String user, Map<String, Object> model) {
+        User userfromBD = userService.findByUsername(user);
+        model.put("user", userfromBD);
         return "userEdit";
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/user")
-    public String userSave(@RequestParam String username,
-                           @RequestParam Map<String, String> form,
-                           @RequestParam("userId") User user,
+    public String userSave(@RequestParam Map<String, String> form,
+                           @RequestParam("userUsername") String user,
                            Model model) {
-        if(!userService.newName(user,username)){
-            model.addAttribute("usernameError","Name can't be empty");
-            model.addAttribute("user", user);
-            return "userEdit";
-        }
+        User userfromBD = userService.findByUsername(user);
         for (String key : form.keySet()) {
             if (key.equals("block")) {
-                user.setActive(false);
+                userfromBD.setActive(false);
             }
             if (key.equals("unblock")) {
-                user.setActive(true);
+                userfromBD.setActive(true);
             }
         }
-        userService.saveUser(user);
+        userService.saveUser(userfromBD);
         return "redirect:/user";
     }
 
@@ -67,7 +62,6 @@ public class UserController {
     public String photo() {
         return "addPhoto";
     }
-
 
     @PostMapping("/addPhoto")
     public String addPhoto(@AuthenticationPrincipal User user,

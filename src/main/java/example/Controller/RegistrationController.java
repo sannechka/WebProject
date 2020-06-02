@@ -40,20 +40,20 @@ public class RegistrationController {
             return "registration";
         }
         user.setActive(true);
-        user.setRoles(Collections.singleton(Role.USER));
+        user.setRoles(Collections.singletonList(Role.USER));
         user.getRooms().add(roomService.findByRoomId((long) 1));
         Lock lock = new ReentrantLock();
         lock.lock();
         try {
-        User userFromDB = userService.findByUsername(user.getUsername());
-        if (userFromDB != null) {
-            model.addAttribute("usernameError", "User exists");
-            return "registration";
-        }
-        Room roomWithAdmin = roomService.getRoomWithAdmin(user.getUsername(),  userService.findByUsername("Admin"));
-        userService.addUser(user, roomWithAdmin)
-        ;}
-        finally {
+            User userFromDB = userService.findByUsername(user.getUsername());
+            if (userFromDB != null) {
+                model.addAttribute("usernameError", "User exists");
+                return "registration";
+            }
+            Room roomWithAdmin = roomService.getRoomWithAdmin(user.getUsername(), userService.findByUsername("Admin"));
+            userService.addUser(user, roomWithAdmin)
+            ;
+        } finally {
             lock.unlock();
         }
 

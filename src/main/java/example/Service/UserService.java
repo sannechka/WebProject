@@ -22,7 +22,6 @@ public class UserService implements UserDetailsService {
     UserRepo userRepo;
     @Autowired
     private PasswordEncoder passwordEncoder;
-
     @Autowired
     FileService fileService;
 
@@ -58,7 +57,7 @@ public class UserService implements UserDetailsService {
     public boolean addPhoto(User user, MultipartFile file) throws IOException {
         if (file != null && !file.getOriginalFilename().isEmpty()) {
 
-            user.setFilename(  fileService.filePath(file));
+            user.setFilename(fileService.filePath(file));
             userRepo.save(user);
             return true;
         }
@@ -75,14 +74,5 @@ public class UserService implements UserDetailsService {
                 .collect(Collectors.toList());
     }
 
-    public boolean newName(User user, String newName){
-       String name = newName.chars().filter(x-> x !=' ').mapToObj(Objects::toString).collect(Collectors.joining());
-        if(!name.isEmpty()){
-            user.setUsername(newName);
-            userRepo.save(user);
-            return true;
-        }
-        return false;
-    }
 }
 

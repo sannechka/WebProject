@@ -5,7 +5,7 @@
             <label class="col-sm-2 col-form-label">User Name :</label>
             <div class="col-sm-7">
                 <input type="text" name="username" class="form-control
-                       ${(usernameError??)?string('is-invalid', '')}"placeholder="User name"/>
+                       ${(nameError??)?string('is-invalid', '')}"placeholder="User name"/>
                 <#if usernameError??>
                     <div class="invalid-feedback">
                         ${usernameError}

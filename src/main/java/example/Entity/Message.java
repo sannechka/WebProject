@@ -9,12 +9,13 @@ import javax.validation.constraints.NotBlank;
 public class Message implements Comparable<Message> {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
+    private Long id;
     @NotBlank(message = "Message can't be empty")
     @Length(max = 2048, message = "Message too long")
     private String text;
+    @Length(max = 50)
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_username")
     private User author;
     private String filename;
     @ManyToOne(fetch = FetchType.LAZY)
@@ -62,7 +63,7 @@ public class Message implements Comparable<Message> {
         return text;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
@@ -70,15 +71,15 @@ public class Message implements Comparable<Message> {
         return filename;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
 
     @Override
     public int compareTo(Message o) {
-        int a = this.getId();
-        int b = o.getId();
+        long a = this.getId();
+        long b = o.getId();
         return (a < b) ? -1 : ((a == b) ? 0 : 1);
     }
 }

@@ -3,9 +3,7 @@ package example.Entity;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 public class Room {
@@ -20,7 +18,7 @@ public class Room {
     @JoinTable(
             name = "user_rooms",
             joinColumns = {@JoinColumn(name = "room_id")},
-            inverseJoinColumns = {@JoinColumn(name = "user_id")}
+            inverseJoinColumns = {@JoinColumn(name = "user_username")}
     )
     private List<User> users = new ArrayList<>();
 

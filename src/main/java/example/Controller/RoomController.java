@@ -65,7 +65,7 @@ public class RoomController {
             List<String> names = users.stream().map(User::getUsername).collect(Collectors.toList());
             for (String key : form.keySet()) {
                 if (names.contains(key)) {
-               room.getUsers().add(userService.findByUsername(key));
+                    room.getUsers().add(userService.findByUsername(key));
                 }
             }
             if (room.getUsers().isEmpty()) {
@@ -105,8 +105,8 @@ public class RoomController {
             model.addAttribute("message", message);
         } else {
             model.addAttribute("message", null);
-            messageService.createMessage(message,  user, roomService.findByRoomId(roomId));
-            messageService.addFile(message,file);
+            messageService.createMessage(message, user, roomService.findByRoomId(roomId));
+            messageService.addFile(message, file);
         }
         model.addAttribute("messages", roomService.getMessage(roomId));
         model.addAttribute("room", roomService.findByRoomId(roomId));
