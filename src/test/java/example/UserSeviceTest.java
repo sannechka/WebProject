@@ -54,9 +54,8 @@ public class UserSeviceTest {
     @Test
     public void createUser() {
         User user = new User();
-        Room room = new Room();
         user.setPassword("111");
-        userSevice.addUser(user, room);
+        userSevice.addUser(user);
         Mockito.verify(userRepo, Mockito.times(1)).save(user);
 
     }

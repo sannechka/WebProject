@@ -3,6 +3,7 @@ package example.Controller;
 import example.Entity.Role;
 import example.Entity.Room;
 import example.Entity.User;
+import example.Repository.RoomRepo;
 import example.Service.RoomService;
 import example.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,24 +40,12 @@ public class RegistrationController {
             model.mergeAttributes(errorMap);
             return "registration";
         }
-        user.setActive(true);
-        user.setRoles(Collections.singletonList(Role.USER));
-        user.getRooms().add(roomService.findByRoomId((long) 1));
-        Lock lock = new ReentrantLock();
-        lock.lock();
-        try {
-            User userFromDB = userService.findByUsername(user.getUsername());
-            if (userFromDB != null) {
+            if (!userService.addUser(user)) {
                 model.addAttribute("usernameError", "User exists");
                 return "registration";
             }
             Room roomWithAdmin = roomService.getRoomWithAdmin(user.getUsername(), userService.findByUsername("Admin"));
-            userService.addUser(user, roomWithAdmin)
-            ;
-        } finally {
-            lock.unlock();
-        }
-
+            userService.addRooms(user, roomWithAdmin, roomService.findByRoomId((long) 1));
         return "redirect:/login";
     }
 }

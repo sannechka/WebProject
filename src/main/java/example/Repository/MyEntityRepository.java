@@ -10,4 +10,7 @@ public interface MyEntityRepository<T, ID> {
     <S extends T> S save(S entity);
 
     List<T> findAll();
+
+    User findByUsername(String username);
+
 }

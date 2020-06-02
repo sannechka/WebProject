@@ -1,5 +1,6 @@
 package example.Service;
 
+import example.Entity.Role;
 import example.Entity.Room;
 import example.Entity.User;
 import example.Repository.UserRepo;
@@ -12,8 +13,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
 @Service
@@ -47,10 +50,23 @@ public class UserService implements UserDetailsService {
         return userRepo.findByUsername(username);
     }
 
-    public boolean addUser(User user, Room adminRoom) {
+    public boolean addUser(User user) {
+        Lock lock = new ReentrantLock();
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.getRooms().add(adminRoom);
-        userRepo.save(user);
+        user.setActive(true);
+        user.setRoles(Collections.singletonList(Role.USER));
+        if (userRepo.findByUsername(user.getUsername()) != null) {
+            return false;
+        } else {
+            lock.lock();
+            if (userRepo.findByUsername(user.getUsername()) != null) {
+                return false;
+            } else {
+                userRepo.save(user);
+            }
+            lock.unlock();
+        }
+
         return true;
     }
 
@@ -74,5 +90,10 @@ public class UserService implements UserDetailsService {
                 .collect(Collectors.toList());
     }
 
+    public void addRooms(User user, Room roomWithAdmin, Room mainRoom) {
+        user.getRooms().add(roomWithAdmin);
+        user.getRooms().add(mainRoom);
+        userRepo.save(user);
+    }
 }
 
