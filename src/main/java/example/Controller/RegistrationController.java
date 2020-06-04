@@ -42,6 +42,7 @@ public class RegistrationController {
         }
             if (!userService.addUser(user)) {
                 model.addAttribute("usernameError", "User exists");
+                System.out.println("hfrelfi");
                 return "registration";
             }
             Room roomWithAdmin = roomService.getRoomWithAdmin(user.getUsername(), userService.findByUsername("Admin"));

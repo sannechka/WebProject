@@ -3,6 +3,7 @@ package example.Service;
 import example.Entity.Role;
 import example.Entity.Room;
 import example.Entity.User;
+import example.Repository.MyEntityRepositoryCustom;
 import example.Repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,8 +16,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
 @Service
@@ -27,7 +26,8 @@ public class UserService implements UserDetailsService {
     private PasswordEncoder passwordEncoder;
     @Autowired
     FileService fileService;
-
+    @Autowired
+    MyEntityRepositoryCustom myEntityRepositoryCustom;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -51,28 +51,20 @@ public class UserService implements UserDetailsService {
     }
 
     public boolean addUser(User user) {
-        Lock lock = new ReentrantLock();
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setActive(true);
         user.setRoles(Collections.singletonList(Role.USER));
-        if (userRepo.findByUsername(user.getUsername()) != null) {
-            return false;
-        } else {
-            lock.lock();
-            if (userRepo.findByUsername(user.getUsername()) != null) {
-                return false;
-            } else {
-                userRepo.save(user);
-            }
-            lock.unlock();
+        try {
+            myEntityRepositoryCustom.save(user);
+            return true;
         }
-
-        return true;
+        catch (Exception ex){
+            return false;
+        }
     }
 
     public boolean addPhoto(User user, MultipartFile file) throws IOException {
         if (file != null && !file.getOriginalFilename().isEmpty()) {
-
             user.setFilename(fileService.filePath(file));
             userRepo.save(user);
             return true;
