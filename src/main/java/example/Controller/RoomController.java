@@ -52,7 +52,7 @@ public class RoomController {
         Message message = new Message();
         message.setText("Bye everyone!!!");
         messageService.createMessage(message, user, roomService.findByRoomId(roomId));
-        return "room";
+        return "redirect:/room";
     }
 
     @GetMapping("/createRoom")
