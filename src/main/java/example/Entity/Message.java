@@ -1,7 +1,5 @@
 package example.Entity;
-
 import org.hibernate.validator.constraints.Length;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 
@@ -13,7 +11,6 @@ public class Message implements Comparable<Message> {
     @NotBlank(message = "Message can't be empty")
     @Length(max = 2048, message = "Message too long")
     private String text;
-    @Length(max = 50)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_username")
     private User author;

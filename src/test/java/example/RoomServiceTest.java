@@ -29,8 +29,9 @@ public class RoomServiceTest {
     @Test
     public void addRoomWithAdmin() {
         User admin = new User();
-        Room room = roomSevice.getRoomWithAdmin("name", admin);
-   Assert.assertNotNull(room);
+        User user = new User();
+        Room room = roomSevice.getRoomWithAdmin(user, admin);
+        Assert.assertNotNull(room);
         Mockito.verify(roomRepo, Mockito.times(2)).save(ArgumentMatchers.any());
     }
 }

@@ -11,12 +11,12 @@ values (1);
 
 create table message
 (
-    id       integer       not null,
-    filename varchar(255),
-    text     varchar(2048) not null,
-    user_username  varchar(50),
-    room_id  bigint,
-    time     varchar(255),
+    id            integer       not null,
+    filename      varchar(255),
+    text          varchar(2048) not null,
+    user_username varchar(50),
+    room_id       bigint,
+    time          varchar(255),
     primary key (id)
 )
     engine = MyISAM;
@@ -32,12 +32,12 @@ create table room
 create table user_role
 (
     user_username varchar(50) not null,
-    roles   varchar(255)
+    roles         varchar(255)
 ) engine = MyISAM;
 create table user_rooms
 (
     user_username varchar(50) not null,
-    room_id bigint       not null,
+    room_id       bigint      not null,
     primary key (room_id, user_username)
 )
     engine = MyISAM;
@@ -45,15 +45,12 @@ create table user_rooms
 
 create table usr
 (
-    username      varchar(50) not null,
+    username varchar(50)  not null,
     active   bit,
     password varchar(255) not null,
     filename varchar(255),
     primary key (username)
 ) engine = MyISAM;
-
-
-
 
 
 alter table message

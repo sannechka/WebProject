@@ -20,10 +20,11 @@ public class RoomService {
     }
 
 
-    public Room getRoomWithAdmin(String username, User admin) {
+    public Room getRoomWithAdmin(User user, User admin) {
         Room room = new Room();
-        room.setName("Chat with admin (" + username + ")");
+        room.setName("Chat with admin (" + user.getUsername() + ")");
         room.getUsers().add(admin);
+        room.getUsers().add(user);
         roomRepo.save(room);
         return room;
     }

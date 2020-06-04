@@ -28,6 +28,8 @@ public class UserService implements UserDetailsService {
     FileService fileService;
     @Autowired
     MyEntityRepositoryCustom myEntityRepositoryCustom;
+    @Autowired
+   RoomService roomService;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -54,6 +56,8 @@ public class UserService implements UserDetailsService {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setActive(true);
         user.setRoles(Collections.singletonList(Role.USER));
+        user.getRooms().add(roomService.findByRoomId((long) 1));
+
         try {
             myEntityRepositoryCustom.save(user);
             return true;
@@ -82,10 +86,5 @@ public class UserService implements UserDetailsService {
                 .collect(Collectors.toList());
     }
 
-    public void addRooms(User user, Room roomWithAdmin, Room mainRoom) {
-        user.getRooms().add(roomWithAdmin);
-        user.getRooms().add(mainRoom);
-        userRepo.save(user);
-    }
 }
 

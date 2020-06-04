@@ -41,6 +41,20 @@ public class RoomController {
         return "room";
     }
 
+    @GetMapping("privateChat/{roomId}")
+    public String delete(Map<String, Object> model,
+                         @PathVariable Long roomId,
+                         @AuthenticationPrincipal User user) {
+        Room room = roomService.findByRoomId(roomId);
+        room.getUsers().remove(user);
+        roomService.saveRoom(room);
+        model.put("rooms", userService.getRooms(user));
+        Message message = new Message();
+        message.setText("Bye everyone!!!");
+        messageService.createMessage(message, user, roomService.findByRoomId(roomId));
+        return "room";
+    }
+
     @GetMapping("/createRoom")
     public String createRoom(Model model, @AuthenticationPrincipal User user) {
         model.addAttribute("users", userService.getListOfUsers(user));

@@ -66,7 +66,8 @@ public class UserController {
     @PostMapping("/addPhoto")
     public String addPhoto(@AuthenticationPrincipal User user,
                            @RequestParam("file") MultipartFile file) throws IOException {
-        userService.addPhoto(user, file);
+            userService.addPhoto(user, file);
+
         return "addPhoto";
     }
 }

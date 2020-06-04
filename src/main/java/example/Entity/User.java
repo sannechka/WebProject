@@ -15,7 +15,6 @@ import java.util.List;
 @Table(name = "usr")
 public class User implements UserDetails {
     @Id
-    @Length(max = 50)
     @NotBlank(message = "Name can't be empty")
     private String username;
 
@@ -125,5 +124,19 @@ public class User implements UserDetails {
 
     public void setRoles(List<Role> roles) {
         this.roles = roles;
+    }
+
+    @Override
+    public int hashCode() {
+        return username.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof User) {
+            User usr = (User) obj;
+            return usr.username.equals(this.username);
+        }
+        return false;
     }
 }

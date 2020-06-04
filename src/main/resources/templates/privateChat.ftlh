@@ -1,4 +1,5 @@
 <#import "parts/Common.ftlh" as c>
+<#include "parts/Security.ftlh">
 <@c.page>
 
     <link href="/static/chat.css" rel="stylesheet" type="text/css">
@@ -55,7 +56,7 @@
                         </div>
                     </#list>
                 </div>
-                <form method="post" action="/privateChat" enctype="multipart/form-data">
+                <form method="post" id="formId" action="/privateChat" enctype="multipart/form-data">
                     <div class="send-wrap ">
 
                         <input type="text" class="form-control ${(textError??)?string('is-invalid', '')}"
@@ -67,11 +68,12 @@
                             </div>
                         </#if>
                         <div class="btn-panel">
-                            <input type="file" name="file">
+                            <input type="file" id="file" name="file">
                             <input type="hidden" name="_csrf" value="${_csrf.token}"/>
                             <input type="hidden" value="${room.getId()}" name='roomId'>
-                            <button class="btn btn-primary" type="submit"> Send</button>
+                            <input class="btn btn-primary" value="Send" onclick="Submit()" type="button">
                             <a class="btn btn-primary " href="/room">Back</a>
+                            <a class="btn btn-primary " href="/privateChat/${room.getId()}">leave chat</a>
                         </div>
                     </div>
                 </form>
